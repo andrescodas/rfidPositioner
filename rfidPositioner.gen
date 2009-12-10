@@ -1,0 +1,108 @@
+
+/*------------------------------------------------------------------------
+ * 
+ *                     --  Module  RFID Positioner  --
+ * 
+ *  Description: The module improves the estimate of the current position
+ *               through RFID readings of tags whose locations are known
+ *  Creation date : 2009-05-07 
+ *  Author: Bogdan PRISACARI
+ *  Updated by: Bogdan PRISACARI
+ * 
+ *------------------------------------------------------------------------*/
+
+module rfidPositioner {
+    number:			9001;
+    version:			"0.01";
+    email:			"openrobots@laas.fr";
+    lang:		    	"c++";
+    internal_data:		RFIDPOSITIONER_STR;
+    requires:                   rfid,rflex;
+    codels_requires:            rfid,rflex;
+}; 
+
+/*------------------------------------------------------------------------
+ *	                   Structures and SDI
+ *------------------------------------------------------------------------*/
+
+
+#include "rfidPositionerStruct.h"
+
+import from rfid {
+#include "rfidStruct.h"
+#include "server/rfidPosterLibStruct.h"
+};
+
+import from rflex {
+#include "rflexStruct.h"
+#include "rflexConst.h"
+#include "server/rflexPosterLibStruct.h"
+};
+
+typedef struct RFIDPOSITIONER_STR {
+         POSITION               position;
+         POSITION_ERROR         estimationError;
+} RFIDPOSITIONER_STR;
+
+
+/*------------------------------------------------------------------------
+ *	                       Requests
+ *------------------------------------------------------------------------*/
+
+request ShowTagDetections {
+	type:			exec;
+	codel_start:		rfidPositionerShowTagDetectionsStart;
+	codel_main:		rfidPositionerShowTagDetectionsMain;
+	codel_end:		rfidPositionerShowTagDetectionsEnd;
+	codel_inter:		rfidPositionerShowTagDetectionsInter;
+	incompatible_with:	ShowTagDetections;
+    	fail_msg:		RFID_POSTER_NOT_FOUND, RFLEX_POSTER_NOT_FOUND; 
+	exec_task:		MainTask;
+};
+
+
+request TrackPosition {
+	type:			exec;
+	codel_start:		rfidPositionerTrackPositionStart;
+	codel_main:		rfidPositionerTrackPositionMain;
+	codel_end:		rfidPositionerTrackPositionEnd;
+	codel_inter:		rfidPositionerTrackPositionInter;
+    	fail_msg:		RFID_POSTER_NOT_FOUND, RFLEX_POSTER_NOT_FOUND; 
+	incompatible_with:	TrackPosition;
+	exec_task:		MainTask;
+};
+
+/*  */
+request StartParticules {
+    doc:		    "SetUp Initial Particles";
+    type:		    exec;
+    exec_task:		    MainTask; 
+    input:		    newPosition::position; 
+    codel_start:	    rfidStartParticulesStart; 
+    interrupt_activity:	    all; 
+};
+
+
+
+
+/*------------------------------------------------------------------------
+ *	                        Posters
+ *------------------------------------------------------------------------*/
+poster Position {
+        update:                 auto;
+        data:                   position::position,
+	                            covariance::estimationError;
+	exec_task:		MainTask;
+};
+
+/*------------------------------------------------------------------------
+ *	                   Execution Tasks
+ *------------------------------------------------------------------------*/
+exec_task MainTask {
+    priority:		    	100;
+    c_init_func:	    	rfidPositionerInit;
+    stack_size:		    	22000;
+    period:			5;
+    delay:			0;
+};
+

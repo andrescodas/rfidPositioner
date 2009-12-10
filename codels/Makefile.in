@@ -1,0 +1,45 @@
+#	$LAAS: Makefile.in,v 1.15 2006/11/20 12:32:35 sjoyeux Exp $
+
+
+
+# --- paths -------------------------------------------------------------
+
+top_builddir=	@top_builddir@
+top_srcdir=	@top_srcdir@
+srcdir=		@srcdir@
+builddir=       @builddir@
+
+INSTALL=  	@INSTALL@
+
+include $(top_builddir)/config.mk
+
+# Ensure that the default target is the one defined in codels.mk
+all: codels-mk-all
+
+# --- source files ------------------------------------------------------
+
+codels_src = \
+	rfidPositionerMainTaskCodels.cc \
+	rfidPositionerCntrlTaskCodels.cc \
+        TagPositions.cc \
+        MonteCarloFunctions.cc \
+	MonteCarloPrintFunctions.cc \
+	input.cc \
+	MonteCarloMath.cc
+
+# Add extra flags for the preprocessor (external libraries, ...)
+# EXTRA_INCLUDES +=
+#
+# Add extra link flags (external libraries, ...)
+# EXTRA_LIBS +=
+#
+# Install files here (any header that is not included in the .gen for instance)
+# Files that are included in the GenoM file are automatically installed
+# use $(includedir) to install headers
+# user-install: 
+
+# --- compilation -------------------------------------------------------
+include $(top_srcdir)/$(autoconfdir)/codels.mk
+include $(top_srcdir)/$(autoconfdir)/config.$(OSAPI).mk
+
+
