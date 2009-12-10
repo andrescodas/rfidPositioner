@@ -254,7 +254,7 @@ void initSensorModel();
 
 #elif defined FILEMODELPOLAR
 
-const char SENSOR_BASE_MODEL[] = "~/simulation/sensor_base_model_P.in";
+const char SENSOR_BASE_MODEL[] = "/simulation/sensor_base_model_P.in";
 void initSensorModel();
 
 

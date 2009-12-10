@@ -110,6 +110,7 @@ int readRFID(TagDetection** tagDetections) {
 #else
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 FILE* covFile;
 FILE* odoFile;
@@ -117,21 +118,40 @@ FILE* rfidFile;
 
 int initInput() {
 
-	covFile = fopen("~/simulation/rflexCovarianceSet.txt", "r");
-	odoFile = fopen("~/simulation/rflexPositionSet.txt", "r");
-	rfidFile = fopen("~/simulation/detectionsBogdanTest.txt", "r");
+	char * pHome;
+	char location[128];
+
+	pHome = getenv("HOME");
+	if (pHome != NULL) {
+		printf("The current path is: %s\n", pHome);
+	} else {
+		printf("Path returned NULL");
+	}
+
+	strcpy(location,pHome);
+	strcat(location,"/simulation/rflexPositionSet.txt");
+	odoFile = fopen(location, "r");
+
+	strcpy(location,pHome);
+	strcat(location,"/simulation/rflexCovarianceSet.txt");
+	covFile = fopen(location, "r");
+
+	strcpy(location,pHome);
+	strcat(location,"/simulation/detectionsBogdanTest.txt");
+	rfidFile = fopen(location, "r");
 
 	if (covFile == NULL) {
-		fprintf(stderr,"ERROR: Could not open the file ~/simulation/rflexCovarianceSet.txt \n");
+		fprintf(stderr,
+				"ERROR: Could not open the file ~/simulation/rflexCovarianceSet.txt \n");
 		return 1;
 	}
 	if (odoFile == NULL) {
-		fprintf(stderr,"ERROR: Could not open the file ~/simulation/rflexPositionSet.txt \n");
+		fprintf(stderr,
+				"ERROR: Could not open the file ~/simulation/rflexPositionSet.txt \n");
 		return 1;
 	}
 	if (rfidFile == NULL) {
-		fprintf(
-				stderr,
+		fprintf(stderr,
 				"ERROR: Could not open the file ~/simulation/detectionsBogdanTest.txt \n");
 		return 1;
 	}
@@ -234,8 +254,12 @@ int readRFID(TagDetection** tagDetections) {
 	status = fscanf(rfidFile, "%lf %lf %lf", &posx, &posy, &post);
 
 	if (status != 3) {
-		printf("Problem Reading RFID File! PositionsInit, number read = %d\n",
-				status);
+
+		if(status == EOF){
+			printf("End of file Reached on RFID\n");
+			return 1;
+		}
+		printf("Problem Reading RFID File! PositionsInit, number read = %d\n",status);
 		printf("Given Positions = %lf %lf %lf\n", posx, posy, post);
 		return 1;
 	}
@@ -290,9 +314,13 @@ int readRFID(TagDetection** tagDetections) {
 
 		status = fscanf(rfidFile, "%lf %lf %lf", &posx, &posy, &post);
 		if (status != 3) {
-			printf(
-					"Problem Reading RFID File! PositionsInit, number read = %d\n",
-					status);
+
+			if(status == EOF){
+				printf("End of file Reached on RFID\n");
+				return 0 ;
+			}
+
+			printf("Problem Reading RFID File! LastRead!, number read = %d\n",status);
 			printf("Given Positions = %lf %lf %lf\n", posx, posy, post);
 			return 1;
 		}

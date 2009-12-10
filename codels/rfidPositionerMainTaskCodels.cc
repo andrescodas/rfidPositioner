@@ -8,15 +8,14 @@
  **
  **/
 
-#include <portLib.h>
-#include <stdio.h>
-#include "server/rfidPositionerHeader.h"
 
-#include "server/rfidPositionerHeader.h"
 #include "TagPositions.h"
 #include "MonteCarloFunctions.h"
 #include "input.h"
-
+#include <portLib.h>
+#include <stdio.h>
+#include "server/rfidPositionerHeader.h"
+#include "server/rfidPositionerHeader.h"
 
 
 /*------------------------------------------------------------------------
@@ -58,8 +57,7 @@ STATUS rfidPositionerInit(int *report) {
 	tagmap = initTagMap();
 	tagvector = initTag2DVector(tagmap);
 
-
-	if(initInput() != 0){
+	if (initInput() != 0) {
 		printf("Problems in input initialization\n");
 	}
 
@@ -125,21 +123,22 @@ ACTIVITY_EVENT rfidPositionerShowTagDetectionsInter(int *report) {
 /* rfidPositionerTrackPositionStart  -  codel START of TrackPosition
  Returns:  START EXEC END ETHER FAIL ZOMBIE */
 ACTIVITY_EVENT rfidPositionerTrackPositionStart(int *report) {
+	int i;
 
 	TagDetection* tagDetections = NULL;
-
 	double odo_position[3];
 	double odo_cov[3][3];
 
 
-	if (readRflex(odo_position, odo_cov) != 0){
+	if (readRflex(odo_position, odo_cov) != 0) {
 		return ETHER;
 	}
-	if(readRFID(&tagDetections)!= 0){
+	if (readRFID(&tagDetections) != 0) {
 		return ETHER;
 	}
 
-	currentPoints = mc_cycleMain(currentPoints, odo_position, old_odo, odo_cov,tagDetections, tagvector);
+	currentPoints = mc_cycleMain(currentPoints, odo_position, old_odo, odo_cov,
+			tagDetections, tagvector);
 
 
 	double mc_x, mc_y, mc_theta, mc_cov[3][3];

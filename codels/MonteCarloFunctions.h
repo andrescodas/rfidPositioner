@@ -3,7 +3,7 @@
 
 #include "TagPositions.h"
 
-const int mc_nSamples = 1000;
+const int mc_nSamples = 200;
 const double mc_PENALIZING_FACTOR = 0;//0.001;
 
 typedef struct mc_Point {

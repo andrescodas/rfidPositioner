@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <cstdio>
 #include <cmath>
+#include <string>
 
 
 
@@ -474,7 +475,15 @@ void initSensorModel() {
 
 	FILE* inputFile;
 	int scanReturn;
-	inputFile = fopen(SENSOR_BASE_MODEL, "r");
+	char * pHome;
+	char location[128];
+
+
+	pHome = getenv("HOME");
+	strcpy(location,pHome);
+	strcat(location,SENSOR_BASE_MODEL);
+	inputFile = fopen(location, "r");
+
 
 	if (inputFile == NULL) {
 		fprintf(stderr, "[generateSensorModel] ERROR: Could not open the file containing the base model (%s)\n",SENSOR_BASE_MODEL);

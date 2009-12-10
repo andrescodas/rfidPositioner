@@ -405,21 +405,22 @@ mc_Points mc_cycleMain(mc_Points currentPoints, double odo_Position[3],
 		TagDetection* tagDetections, Tag2DVector tags) {
 
 	int sprintfResult;
-	char outputFile[128];
+	char outputFile[64];
 
 	stepIndex++;
 
-	sprintfResult = sprintf(outputFile, "~/simulation/results/initStep%d.m",
+
+	sprintfResult = sprintf(outputFile, "initStep%d.m",
 			stepIndex);
 
-	mc_printSamples(outputFile, "w", NULL, currentPoints);
+	mc_printSamples(outputFile, currentPoints);
 
 	mc_Points result = mc_generateNextOdometryPoints(currentPoints,
 			odo_Position, old_odo, covariance);
 
-	sprintf(outputFile, "~/simulation/results/afterOdometry%d.m", stepIndex);
+	sprintf(outputFile, "afterOdometry%d.m", stepIndex);
 
-	mc_printSamples(outputFile, "w", NULL, result);
+	mc_printSamples(outputFile, result);
 
 	result = mc_cycleMainNoMovement(result, tagDetections, tags);
 
@@ -439,7 +440,7 @@ mc_Points mc_cycleMain(mc_Points currentPoints, double odo_Position[3],
 mc_Points mc_cycleMainNoMovement(mc_Points currentPoints,
 		TagDetection* tagDetections, Tag2DVector tags) {
 
-	char outputFile[128];
+	char outputFile[64];
 	mc_Points result = mc_copyPoints(currentPoints);
 	//mc_printSamples("Before observation:",result);
 
@@ -447,18 +448,18 @@ mc_Points mc_cycleMainNoMovement(mc_Points currentPoints,
 	result = mc_adjustWeightsThroughObservation(result, tagDetections, tags);
 	//mc_printSamples("After observation:",result);
 
-	sprintf(outputFile, "~/simulation/results/afterWeight%d.m", stepIndex);
-	mc_printSamples(outputFile, "w", NULL, result);
+	sprintf(outputFile, "afterWeight%d.m", stepIndex);
+	mc_printSamples(outputFile, result);
 
 	mc_normalize(&result);
 
-	sprintf(outputFile, "~/simulation/results/afterNormalize%d.m", stepIndex);
-	mc_printSamples(outputFile, "w", NULL, result);
+	sprintf(outputFile, "afterNormalize%d.m", stepIndex);
+	mc_printSamples(outputFile, result);
 
 	result = mc_generateNextUniformExtractedPoints2(&result);
 
-	sprintf(outputFile, "~/simulation/results/afterResample%d.m", stepIndex);
-	mc_printSamples(outputFile, "w", NULL, result);
+	sprintf(outputFile, "afterResample%d.m", stepIndex);
+	mc_printSamples(outputFile, result);
 
 	return result;
 }

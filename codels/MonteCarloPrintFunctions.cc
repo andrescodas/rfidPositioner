@@ -6,6 +6,10 @@
  */
 
 #include "MonteCarloPrintFunctions.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 
 //@tested
 //prints a mc_Point
@@ -25,6 +29,7 @@ void mc_printMatrix(double A[3][3]) {
 }
 
 //prints the current samples with an introduction text
+/*
 void mc_printSamples(const char* introduction, mc_Points currentPoints) {
 	int numberPrinting = mc_nSamples;//3;
 	if (introduction != NULL) {
@@ -41,16 +46,24 @@ void mc_printSamples(const char* introduction, mc_Points currentPoints) {
 				currentPoints.weights[i]);
 	}
 }
-
+*/
 //same as the former, but in a file
-void mc_printSamples(const char OUTPUT_FILE_NAME[], const char fileOption[],const char* introduction, mc_Points currentPoints){
+int mc_printSamples(const char OUTPUT_FILE_NAME[], mc_Points currentPoints){
 
 	int numberPrinting = mc_nSamples;
+	char * pHome;
+	char location[128];
 
-	FILE* outputFile = fopen(OUTPUT_FILE_NAME, fileOption);
+	pHome = getenv("HOME");
+	strcpy(location,pHome);
+	strcat(location,"/simulation/results/");
+	strcat(location,OUTPUT_FILE_NAME);
 
-	if (introduction != NULL) {
-		fprintf(outputFile, "%s\n", introduction);
+	FILE* outputFile = fopen(location, "w");
+
+	if(outputFile == NULL){
+		printf("Invalid File to write results. File 'path' == %s \n",location);
+		return 1;
 	}
 
 	if (numberPrinting > mc_nSamples) {
@@ -69,6 +82,7 @@ void mc_printSamples(const char OUTPUT_FILE_NAME[], const char fileOption[],cons
 	fprintf(outputFile, "\nparticules = struct('pos',m);\n");
 	fprintf(outputFile, "simulations = [simulations particules];\n");
 	fclose(outputFile);
+	return 0;
 }
 //prints the current samples with an introduction text
 
