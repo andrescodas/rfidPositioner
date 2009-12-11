@@ -12,7 +12,7 @@
 
 void mc_printPoint(mc_Point p);
 
-int mc_printSamples(const char OUTPUT_FILE_NAME[], mc_Points currentPoints);
+int mc_printSamples(const char OUTPUT_FILE_NAME[], mc_Points *currentPoints);
 
 void mc_printMatrix(double A[3][3]) ;
 

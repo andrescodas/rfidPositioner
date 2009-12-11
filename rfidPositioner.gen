@@ -42,6 +42,7 @@ import from rflex {
 typedef struct RFIDPOSITIONER_STR {
          POSITION               position;
          POSITION_ERROR         estimationError;
+         int					numberParticles;
 } RFIDPOSITIONER_STR;
 
 
@@ -49,23 +50,10 @@ typedef struct RFIDPOSITIONER_STR {
  *	                       Requests
  *------------------------------------------------------------------------*/
 
-request ShowTagDetections {
-	type:			exec;
-	codel_start:		rfidPositionerShowTagDetectionsStart;
-	codel_main:		rfidPositionerShowTagDetectionsMain;
-	codel_end:		rfidPositionerShowTagDetectionsEnd;
-	codel_inter:		rfidPositionerShowTagDetectionsInter;
-	incompatible_with:	ShowTagDetections;
-    	fail_msg:		RFID_POSTER_NOT_FOUND, RFLEX_POSTER_NOT_FOUND; 
-	exec_task:		MainTask;
-};
-
 
 request TrackPosition {
 	type:			exec;
 	codel_start:		rfidPositionerTrackPositionStart;
-	codel_main:		rfidPositionerTrackPositionMain;
-	codel_end:		rfidPositionerTrackPositionEnd;
 	codel_inter:		rfidPositionerTrackPositionInter;
     	fail_msg:		RFID_POSTER_NOT_FOUND, RFLEX_POSTER_NOT_FOUND; 
 	incompatible_with:	TrackPosition;
@@ -82,7 +70,27 @@ request StartParticules {
     interrupt_activity:	    all; 
 };
 
+/*  */
+request SetNumberParticles {
+    doc:		    "Set numberParticles used in Monte Carlo";
+    type:		    exec;
+    exec_task:		MainTask; 
+    input:		    newNumberParticles::numberParticles; 
+    codel_start:	    rfidPositionerSetNumberParticlesStart;
+    codel_inter:	    rfidPositionerSetNumberParticlesInter;
+    interrupt_activity:	all; 
+};
 
+
+/*  */
+request GetNumberParticles {
+    doc:		    "Get mc_nSamples --> Number of Particles used in Monte Carlo";
+    type:		    exec;
+    exec_task:		MainTask; 
+    output:		    outNumberParticles::numberParticles; 
+    codel_start:	rfidPositionerGetNumberParticlesStart;
+    codel_inter:	rfidPositionerGetNumberParticlesInter;
+};
 
 
 /*------------------------------------------------------------------------

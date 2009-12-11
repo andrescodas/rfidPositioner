@@ -11,6 +11,7 @@
 #include <string.h>
 
 
+
 //@tested
 //prints a mc_Point
 void mc_printPoint(mc_Point p) {
@@ -28,29 +29,9 @@ void mc_printMatrix(double A[3][3]) {
 	}
 }
 
-//prints the current samples with an introduction text
-/*
-void mc_printSamples(const char* introduction, mc_Points currentPoints) {
-	int numberPrinting = mc_nSamples;//3;
-	if (introduction != NULL) {
-		printf("%s\n", introduction);
-	}
+int mc_printSamples(const char OUTPUT_FILE_NAME[], mc_Points *currentPoints){
 
-	if (numberPrinting > mc_nSamples) {
-		numberPrinting = mc_nSamples;
-	}
-
-	for (int i = 0; i < numberPrinting; ++i) {
-		printf("\t(%10.5lf,%10.5lf,%10.5lf) - %g\n", currentPoints.points[i].x,
-				currentPoints.points[i].y, currentPoints.points[i].theta,
-				currentPoints.weights[i]);
-	}
-}
-*/
-//same as the former, but in a file
-int mc_printSamples(const char OUTPUT_FILE_NAME[], mc_Points currentPoints){
-
-	int numberPrinting = mc_nSamples;
+	int numberPrinting = MAXMCNSAMPLES;
 	char * pHome;
 	char location[128];
 
@@ -73,12 +54,12 @@ int mc_printSamples(const char OUTPUT_FILE_NAME[], mc_Points currentPoints){
 	int i;
 	for (i = 0; i < numberPrinting - 1; ++i) {
 		fprintf(outputFile, "\n\t%lf,\t%lf,\t%lf,\t%.20lf;",
-				currentPoints.points[i].x, currentPoints.points[i].y,
-				currentPoints.points[i].theta, currentPoints.weights[i]);
+				currentPoints->points[i].x, currentPoints->points[i].y,
+				currentPoints->points[i].theta, currentPoints->weights[i]);
 	}
 	fprintf(outputFile, "\n\t%lf,\t%lf,\t%lf,\t%.20lf];",
-			currentPoints.points[i].x, currentPoints.points[i].y,
-			currentPoints.points[i].theta, currentPoints.weights[i]);
+			currentPoints->points[i].x, currentPoints->points[i].y,
+			currentPoints->points[i].theta, currentPoints->weights[i]);
 	fprintf(outputFile, "\nparticules = struct('pos',m);\n");
 	fprintf(outputFile, "simulations = [simulations particules];\n");
 	fclose(outputFile);

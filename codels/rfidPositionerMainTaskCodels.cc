@@ -8,15 +8,20 @@
  **
  **/
 
+#include <portLib.h>
 
 #include "TagPositions.h"
 #include "MonteCarloFunctions.h"
 #include "input.h"
-#include <portLib.h>
 #include <stdio.h>
 #include "server/rfidPositionerHeader.h"
-#include "server/rfidPositionerHeader.h"
 
+
+mc_Points currentPoints;
+TagMap tagmap;
+Tag2DVector tagvector;
+
+double old_odo[3]; // x y t
 
 /*------------------------------------------------------------------------
  *
@@ -26,21 +31,6 @@
  *
  * Returns:    OK or ERROR
  */
-
-mc_Points currentPoints;
-
-/*
- *   By: Andres
- *
- *   This variables are related to the Odometry
- *   Maybe Bogdan says "old" because they are the last read
- *
- * */
-
-TagMap tagmap;
-Tag2DVector tagvector;
-
-double old_odo[3]; // x y z
 
 
 /*------------------------
@@ -69,47 +59,11 @@ STATUS rfidPositionerInit(int *report) {
 		SDI_F->estimationError.position_cov[i] = 0;
 	}
 
-	currentPoints = mc_init(mc_Point(0, 0, 0));
+	mc_init(mc_Point(0, 0, 0),&currentPoints);
 
 	initSensorModel();
 
 	return OK;
-}
-
-/*------------------------------------------------------------------------
- * ShowTagDetections
- *
- * Description:
- *
- * Reports:      OK
- */
-
-/* rfidPositionerShowTagDetectionsStart  -  codel START of ShowTagDetections
- Returns:  START EXEC END ETHER FAIL ZOMBIE */
-ACTIVITY_EVENT rfidPositionerShowTagDetectionsStart(int *report) {
-	/* ... add your code here ... */
-	return ETHER;
-}
-
-/* rfidPositionerShowTagDetectionsMain  -  codel EXEC of ShowTagDetections
- Returns:  EXEC END ETHER FAIL ZOMBIE */
-ACTIVITY_EVENT rfidPositionerShowTagDetectionsMain(int *report) {
-	/* ... add your code here ... */
-	return ETHER;
-}
-
-/* rfidPositionerShowTagDetectionsEnd  -  codel END of ShowTagDetections
- Returns:  END ETHER FAIL ZOMBIE */
-ACTIVITY_EVENT rfidPositionerShowTagDetectionsEnd(int *report) {
-	/* ... add your code here ... */
-	return ETHER;
-}
-
-/* rfidPositionerShowTagDetectionsInter  -  codel INTER of ShowTagDetections
- Returns:  INTER ETHER FAIL ZOMBIE */
-ACTIVITY_EVENT rfidPositionerShowTagDetectionsInter(int *report) {
-	/* ... add your code here ... */
-	return ETHER;
 }
 
 /*------------------------------------------------------------------------
@@ -118,12 +72,13 @@ ACTIVITY_EVENT rfidPositionerShowTagDetectionsInter(int *report) {
  * Description:
  *
  * Reports:      OK
+ *              S_rfidPositioner_RFID_POSTER_NOT_FOUND
+ *              S_rfidPositioner_RFLEX_POSTER_NOT_FOUND
  */
 
 /* rfidPositionerTrackPositionStart  -  codel START of TrackPosition
  Returns:  START EXEC END ETHER FAIL ZOMBIE */
 ACTIVITY_EVENT rfidPositionerTrackPositionStart(int *report) {
-	int i;
 
 	TagDetection* tagDetections = NULL;
 	double odo_position[3];
@@ -137,7 +92,7 @@ ACTIVITY_EVENT rfidPositionerTrackPositionStart(int *report) {
 		return ETHER;
 	}
 
-	currentPoints = mc_cycleMain(currentPoints, odo_position, old_odo, odo_cov,
+	mc_cycleMain(&currentPoints, odo_position, old_odo, odo_cov,
 			tagDetections, tagvector);
 
 
@@ -173,25 +128,13 @@ ACTIVITY_EVENT rfidPositionerTrackPositionStart(int *report) {
 	return ETHER;
 }
 
-/* rfidPositionerTrackPositionMain  -  codel EXEC of TrackPosition
- Returns:  EXEC END ETHER FAIL ZOMBIE */
-ACTIVITY_EVENT rfidPositionerTrackPositionMain(int *report) {
-	/* ... add your code here ... */
-	return ETHER;
-}
-
-/* rfidPositionerTrackPositionEnd  -  codel END of TrackPosition
- Returns:  END ETHER FAIL ZOMBIE */
-ACTIVITY_EVENT rfidPositionerTrackPositionEnd(int *report) {
-	/* ... add your code here ... */
-	return ETHER;
-}
-
 /* rfidPositionerTrackPositionInter  -  codel INTER of TrackPosition
- Returns:  INTER ETHER FAIL ZOMBIE */
-ACTIVITY_EVENT rfidPositionerTrackPositionInter(int *report) {
-	/* ... add your code here ... */
-	return ETHER;
+   Returns:  INTER ETHER FAIL ZOMBIE */
+ACTIVITY_EVENT
+rfidPositionerTrackPositionInter(int *report)
+{
+  /* ... add your code here ... */
+  return ETHER;
 }
 
 /*------------------------------------------------------------------------
@@ -203,11 +146,12 @@ ACTIVITY_EVENT rfidPositionerTrackPositionInter(int *report) {
  */
 
 /* rfidStartParticulesStart  -  codel START of StartParticules
- Returns:  START EXEC END ETHER FAIL ZOMBIE */
-ACTIVITY_EVENT rfidStartParticulesStart(POSITION *position, int *report) {
-
-	currentPoints = mc_init(mc_Point(position->xRob, position->yRob,
-			position->theta));
+   Returns:  START EXEC END ETHER FAIL ZOMBIE */
+ACTIVITY_EVENT
+rfidStartParticulesStart(POSITION *position, int *report)
+{
+	mc_init(mc_Point(position->xRob, position->yRob,
+			position->theta),&currentPoints);
 
 	old_odo[0] = position->xRob;
 	old_odo[1] = position->yRob;
@@ -228,4 +172,57 @@ ACTIVITY_EVENT rfidStartParticulesStart(POSITION *position, int *report) {
 
 	return ETHER;
 }
+
+/*------------------------------------------------------------------------
+ * SetNumberParticles
+ *
+ * Description:
+ *
+ * Reports:      OK
+ */
+
+/* rfidPositionerSetNumberParticlesStart  -  codel START of SetNumberParticles
+   Returns:  START EXEC END ETHER FAIL ZOMBIE */
+ACTIVITY_EVENT
+rfidPositionerSetNumberParticlesStart(int *numberParticles, int *report)
+{
+  /* ... add your code here ... */
+  return ETHER;
+}
+
+/* rfidPositionerSetNumberParticlesInter  -  codel INTER of SetNumberParticles
+   Returns:  INTER ETHER FAIL ZOMBIE */
+ACTIVITY_EVENT
+rfidPositionerSetNumberParticlesInter(int *numberParticles, int *report)
+{
+  /* ... add your code here ... */
+  return ETHER;
+}
+
+/*------------------------------------------------------------------------
+ * GetNumberParticles
+ *
+ * Description:
+ *
+ * Reports:      OK
+ */
+
+/* rfidPositionerGetNumberParticlesStart  -  codel START of GetNumberParticles
+   Returns:  START EXEC END ETHER FAIL ZOMBIE */
+ACTIVITY_EVENT
+rfidPositionerGetNumberParticlesStart(int *numberParticles, int *report)
+{
+  /* ... add your code here ... */
+  return ETHER;
+}
+
+/* rfidPositionerGetNumberParticlesInter  -  codel INTER of GetNumberParticles
+   Returns:  INTER ETHER FAIL ZOMBIE */
+ACTIVITY_EVENT
+rfidPositionerGetNumberParticlesInter(int *numberParticles, int *report)
+{
+  /* ... add your code here ... */
+  return ETHER;
+}
+
 
