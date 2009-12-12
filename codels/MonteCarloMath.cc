@@ -44,22 +44,24 @@ double mc_getGaussDouble(double m, double e) {
 
 //@tested
 //draws a random point in the gaussian distribution centered in center and given by the covariance
-mc_Point mc_generateGaussianRandomPoint(mc_Point center,
-		double covariance[3][3]) {
+void mc_generateGaussianRandomPoint(mc_Point center,
+	double covariance[3][3],mc_Point *newPoint) {
 	double gaussianVector[3] = { mc_getGaussDouble(0, 1), mc_getGaussDouble(0,
 			1), mc_getGaussDouble(0, 1) };
 	double L[3][3];
 	mc_getCholeskyDecomposition(covariance, L);
 	double vector[3];
 	mc_multiplyMatrices(L, gaussianVector, vector);
-	return mc_Point(center.x + vector[0], center.y + vector[1], center.theta
-			+ vector[2]);
+
+	newPoint->x = center.x + vector[0];
+	newPoint->y = center.y + vector[1];
+	newPoint->theta = center.theta+ vector[2];
 }
 
 
 //@tested
 //draws a random point in the gaussian distribution centered in center and given by the covariance
-void mc_generateGaussianRandomPoint(double distributionPoint[3],double covariance[3][3]) {
+void mc_generateGaussianRandomPoint(double distributionPoint[3],const double covariance[3][3]) {
 	double gaussianVector[3] = { mc_getGaussDouble(0, 1), mc_getGaussDouble(0,1), mc_getGaussDouble(0, 1) };
 	double L[3][3];
 
@@ -71,7 +73,7 @@ void mc_generateGaussianRandomPoint(double distributionPoint[3],double covarianc
 
 //@tested
 //returns the cholesky decomposition of A in L
-void mc_getCholeskyDecomposition(double A[3][3], double L[3][3]) {
+void mc_getCholeskyDecomposition(const double A[3][3], double L[3][3]) {
 	L[0][0] = sqrt(A[0][0]);
 	L[1][0] = 1 / L[0][0] * (A[1][0]);
 	L[1][1] = sqrt(A[1][1] - (L[1][0] * L[1][0]));
@@ -84,7 +86,7 @@ void mc_getCholeskyDecomposition(double A[3][3], double L[3][3]) {
 
 //@tested
 //returns the result of the multiplication between A and B in P
-void mc_multiplyMatrices(double A[3][3], double B[3][3], double P[3][3]) {
+void mc_multiplyMatrices(const double A[3][3],const  double B[3][3], double P[3][3]) {
 	for (int i = 0; i < 3; ++i) {
 		for (int j = 0; j < 3; ++j) {
 			P[i][j] = 0;
@@ -97,7 +99,7 @@ void mc_multiplyMatrices(double A[3][3], double B[3][3], double P[3][3]) {
 
 //@tested
 //returns the result of the multiplication between A and B in P
-void mc_multiplyMatrices(double A[3][3], double B[3], double P[3]) {
+void mc_multiplyMatrices(const double A[3][3],const  double B[3], double P[3]) {
 	for (int i = 0; i < 3; ++i) {
 		P[i] = 0;
 		for (int k = 0; k < 3; ++k) {
@@ -108,7 +110,7 @@ void mc_multiplyMatrices(double A[3][3], double B[3], double P[3]) {
 
 //@tested
 //returns the result of the difference between A and B in S
-void mc_substractMatrices(double A[3][3], double B[3][3], double S[3][3]) {
+void mc_substractMatrices(const double A[3][3],const  double B[3][3], double S[3][3]) {
 	for (int i = 0; i < 3; ++i) {
 		for (int j = 0; j < 3; ++j) {
 			S[i][j] = A[i][j] - B[i][j];
@@ -118,7 +120,7 @@ void mc_substractMatrices(double A[3][3], double B[3][3], double S[3][3]) {
 
 //@tested
 //returns the transpose of A in P
-void mc_transposeMatrix(double A[3][3], double P[3][3]) {
+void mc_transposeMatrix(const double A[3][3], double P[3][3]) {
 	for (int i = 0; i < 3; ++i) {
 		for (int j = 0; j < 3; ++j) {
 			P[i][j] = A[j][i];
@@ -126,13 +128,13 @@ void mc_transposeMatrix(double A[3][3], double P[3][3]) {
 	}
 }
 
-void mc_substractVector(double A[3], double B[3], double S[3]) {
+void mc_substractVector(const double A[3],const double B[3], double S[3]) {
 	for (int i = 0; i < 3; ++i) {
 			S[i] = A[i] - B[i];
 	}
 }
 
-void mc_sumVector(double A[3], double B[3], double S[3]) {
+void mc_sumVector(const double A[3], const double B[3], double S[3]) {
 	for (int i = 0; i < 3; ++i) {
 			S[i] = A[i] + B[i];
 	}

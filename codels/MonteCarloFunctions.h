@@ -32,14 +32,14 @@ typedef struct mc_Points {
 	}
 } mc_Points;
 
-void mc_init(mc_Point origin,mc_Points *particles);
+void mc_init(const mc_Point origin,mc_Points *particles);
 
-void mc_getEstimatePosition(mc_Points currentPoints,double* mc_x_addr,double* mc_y_addr,double* mc_theta_addr,double mc_cov[3][3]);
+void mc_getEstimatePosition(const mc_Points currentPoints,double* mc_x_addr,double* mc_y_addr,double* mc_theta_addr,double mc_cov[3][3]);
 
-bool mc_odometryChangeIsImportant(double dx, double dy, double dtheta, double covariance[3][3]);
+bool mc_odometryChangeIsImportant(double dx, double dy, double dtheta,const double covariance[3][3]);
 
-void mc_cycleMain(mc_Points *currentPoints, double odo_Position[3],
-		double old_odo[3], double covariance[3][3],
-		TagDetection* tagDetections, Tag2DVector tags);
+void mc_cycleMain(mc_Points *currentPoints,const double odo_Position[3],
+		const double old_odo[3],const double covariance[3][3],
+		const TagDetection* tagDetections,const Tag2DVector tags);
 
 #endif // _MONTE_CARLO_FUNCTIONS_

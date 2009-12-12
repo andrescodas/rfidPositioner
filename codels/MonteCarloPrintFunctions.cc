@@ -14,13 +14,13 @@
 
 //@tested
 //prints a mc_Point
-void mc_printPoint(mc_Point p) {
+void mc_printPoint(const mc_Point p) {
 	printf("{x=%g, y=%g, theta=%g}", p.x, p.y, p.theta);
 }
 
 //@tested
 //prints the matrix A
-void mc_printMatrix(double A[3][3]) {
+void mc_printMatrix(const double A[3][3]) {
 	for (int i = 0; i < 3; ++i) {
 		for (int j = 0; j < 3; ++j) {
 			printf("%g ", A[i][j]);
@@ -29,7 +29,7 @@ void mc_printMatrix(double A[3][3]) {
 	}
 }
 
-int mc_printSamples(const char OUTPUT_FILE_NAME[], mc_Points *currentPoints){
+int mc_printSamples(const char OUTPUT_FILE_NAME[],const  mc_Points *currentPoints){
 
 	int numberPrinting = MAXMCNSAMPLES;
 	char * pHome;
@@ -69,8 +69,8 @@ int mc_printSamples(const char OUTPUT_FILE_NAME[], mc_Points *currentPoints){
 
 
 //prints tag detections
-void mc_printTagDetections(TagDetection* tagDetections) {
-	TagDetection* aux = tagDetections;
+void mc_printTagDetections(const TagDetection* tagDetections) {
+	const TagDetection* aux = tagDetections;
 	int tagNum = -2;
 	while (aux != 0) {
 
@@ -87,8 +87,8 @@ void mc_printTagDetections(TagDetection* tagDetections) {
 	printf("\n");
 }
 
-void mc_printTagsExpected(TagExpectation* tagsExpected) {
-	TagExpectation* aux = tagsExpected;
+void mc_printTagsExpected(const TagExpectation* tagsExpected) {
+	const TagExpectation* aux = tagsExpected;
 	int tagNum;
 	while (aux != 0) {
 

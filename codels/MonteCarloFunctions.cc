@@ -40,7 +40,7 @@ mc_Points mc_generateNextUniformExtractedPoints(mc_Points p) {
 */
 
 //returns a copy of the points source
-void mc_copyPoints(mc_Points *source, mc_Points *result) {
+void mc_copyPoints(const mc_Points *source, mc_Points *result) {
 	for (int i = 0; i < mc_nSamples; ++i) {
 		result->points[i] = source->points[i];
 		result->weights[i] = source->weights[i];
@@ -60,7 +60,7 @@ void mc_cumulativeWeights(mc_Points *p) {
 
 }
 
-int searchParticule(mc_Points *p, double aleatoryNumber) {
+int searchParticule(const mc_Points *p, double aleatoryNumber) {
 	int bottomIndex = 0;
 	int topIndex = mc_nSamples - 1;
 	int currentIndex;
@@ -141,7 +141,7 @@ void mc_normalize(mc_Points *p) {
 
 //@tested
 //initializes the points (currently the initialization corresponds to the case where we now the starting position: origin)
-void mc_init(mc_Point origin,mc_Points *particles) {
+void mc_init(const mc_Point origin,mc_Points *particles) {
 	srand(time(NULL));
 	double weight = ((double) 1) / (double) mc_nSamples;
 	for (int i = 0; i < mc_nSamples; ++i) {
@@ -156,7 +156,7 @@ void mc_init(mc_Point origin,mc_Points *particles) {
 // <- covariance = the error estimation of the odometer
 // -> the generated points
 void mc_generateNextOdometryPoints(mc_Points *currentPoints,
-		double odo_Position[3], double old_odo[3], double covariance[3][3]) {
+		const double odo_Position[3], const double old_odo[3], const double covariance[3][3]) {
 
 	double deslocInRflexBase[3];
 	double distributionPoint[3];
@@ -188,7 +188,7 @@ void mc_generateNextOdometryPoints(mc_Points *currentPoints,
 
 
 //calculates the position given by the samples and their weights and returns it in the pointer parameters
-void mc_getEstimatePosition(mc_Points currentPoints, double* mc_x_addr,
+void mc_getEstimatePosition(const mc_Points currentPoints, double* mc_x_addr,
 		double* mc_y_addr, double* mc_theta_addr, double mc_cov[3][3]) {
 	*mc_x_addr = 0;
 	*mc_y_addr = 0;
@@ -252,7 +252,7 @@ void mc_getEstimatePosition(mc_Points currentPoints, double* mc_x_addr,
  * is more important
  * */
 bool mc_odometryChangeIsImportant(double dx, double dy, double dtheta,
-		double covariance[3][3]) {
+		const double covariance[3][3]) {
 	if (1 == 1) {
 		return true;
 	}
@@ -266,7 +266,7 @@ bool mc_odometryChangeIsImportant(double dx, double dy, double dtheta,
 	}
 }
 
-double mc_getSimilarityProbability(TagDetection* tagDetections,
+double mc_getSimilarityProbability(const TagDetection* tagDetections,
 		TagExpectation* tagsExpected, int created) {
 
 	double p = 1;
@@ -275,7 +275,7 @@ double mc_getSimilarityProbability(TagDetection* tagDetections,
 	TagExpectation* tagExpectationAux = tagsExpected;
 	TagExpectation* notFoundedYet = tagsExpected;
 	TagExpectation* before = NULL;
-	TagDetection* tagDetectionAux = tagDetections;
+	const TagDetection* tagDetectionAux = tagDetections;
 
 	// TODO: CHANGE WHEN ANTENNA 5 IS REPAIRED
 	// for all the possible detections
@@ -367,7 +367,7 @@ double mc_getSimilarityProbability(TagDetection* tagDetections,
 }
 // created int variable is only for verification... debug
 void mc_adjustWeightsThroughObservation(mc_Points *currentPoints,
-	TagDetection* tagDetections, Tag2DVector tags) {
+		const TagDetection* tagDetections,const  Tag2DVector tags) {
 
 	TagExpectation* tagsExpected;
 	int created;
@@ -400,7 +400,7 @@ int stepIndex = 0;
 // -> the new points after a Monte Carlo cycle
 
 void mc_cycleMainNoMovement(mc_Points *currentPoints,
-		TagDetection* tagDetections, Tag2DVector tags) {
+		const TagDetection* tagDetections,const  Tag2DVector tags) {
 
 	char outputFile[64];
 
@@ -442,9 +442,9 @@ void mc_cycleMainNoMovement(mc_Points *currentPoints,
 // -> the new points after a Monte Carlo cycle
 
 
-void mc_cycleMain(mc_Points *currentPoints, double odo_Position[3],
-		double old_odo[3], double covariance[3][3],
-		TagDetection* tagDetections, Tag2DVector tags) {
+void mc_cycleMain(mc_Points *currentPoints,const double odo_Position[3],
+		const double old_odo[3],const  double covariance[3][3],
+		const TagDetection* tagDetections,const  Tag2DVector tags) {
 
 	int sprintfResult;
 	char outputFile[64];

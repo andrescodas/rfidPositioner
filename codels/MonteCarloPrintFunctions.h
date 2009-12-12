@@ -10,16 +10,16 @@
 
 #include "MonteCarloFunctions.h"
 
-void mc_printPoint(mc_Point p);
+void mc_printPoint(const mc_Point p);
 
-int mc_printSamples(const char OUTPUT_FILE_NAME[], mc_Points *currentPoints);
+int mc_printSamples(const char OUTPUT_FILE_NAME[],const  mc_Points *currentPoints);
 
-void mc_printMatrix(double A[3][3]) ;
+void mc_printMatrix(const double A[3][3]) ;
 
 //void mc_printSamples(const char* introduction, mc_Points currentPoints);
 
-void mc_printTagDetections(TagDetection* tagDetections);
+void mc_printTagDetections(const TagDetection* tagDetections);
 
-void mc_printTagsExpected(TagExpectation* tagsExpected);
+void mc_printTagsExpected(const TagExpectation* tagsExpected);
 
 #endif /* MONTECARLOPRINTFUNCTIONS_H_ */
