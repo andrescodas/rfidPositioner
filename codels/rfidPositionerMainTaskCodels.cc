@@ -133,7 +133,7 @@ ACTIVITY_EVENT rfidPositionerTrackPositionStart(int *report) {
 ACTIVITY_EVENT
 rfidPositionerTrackPositionInter(int *report)
 {
-  /* ... add your code here ... */
+  printf("rfidPositionerTrackPositionInter\n");
   return ETHER;
 }
 
@@ -186,7 +186,7 @@ rfidStartParticulesStart(POSITION *position, int *report)
 ACTIVITY_EVENT
 rfidPositionerSetNumberParticlesStart(int *numberParticles, int *report)
 {
-  /* ... add your code here ... */
+  mc_nSamples = *numberParticles;
   return ETHER;
 }
 
@@ -195,7 +195,7 @@ rfidPositionerSetNumberParticlesStart(int *numberParticles, int *report)
 ACTIVITY_EVENT
 rfidPositionerSetNumberParticlesInter(int *numberParticles, int *report)
 {
-  /* ... add your code here ... */
+  printf("rfidPositionerSetNumberParticlesInter\n");
   return ETHER;
 }
 
@@ -212,7 +212,7 @@ rfidPositionerSetNumberParticlesInter(int *numberParticles, int *report)
 ACTIVITY_EVENT
 rfidPositionerGetNumberParticlesStart(int *numberParticles, int *report)
 {
-  /* ... add your code here ... */
+  *numberParticles = mc_nSamples;
   return ETHER;
 }
 
@@ -221,7 +221,7 @@ rfidPositionerGetNumberParticlesStart(int *numberParticles, int *report)
 ACTIVITY_EVENT
 rfidPositionerGetNumberParticlesInter(int *numberParticles, int *report)
 {
-  /* ... add your code here ... */
+  printf("rfidPositionerGetNumberParticlesInter\n");
   return ETHER;
 }
 
