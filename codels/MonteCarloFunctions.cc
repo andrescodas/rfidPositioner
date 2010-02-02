@@ -410,12 +410,12 @@ void mc_cycleMainNoMovement(mc_Points *currentPoints,
 	//mc_printSamples("After observation:",result);
 
 	sprintf(outputFile, "afterWeight%d.m", stepIndex);
-	mc_printSamples(outputFile, currentPoints);
+	//mc_printSamples(outputFile, currentPoints);
 
 	mc_normalize(currentPoints);
 
 	sprintf(outputFile, "afterNormalize%d.m", stepIndex);
-	mc_printSamples(outputFile, currentPoints);
+	//mc_printSamples(outputFile, currentPoints);
 
 
 
@@ -424,7 +424,7 @@ void mc_cycleMainNoMovement(mc_Points *currentPoints,
 
 
 	sprintf(outputFile, "afterResample%d.m", stepIndex);
-	mc_printSamples(outputFile, currentPoints);
+	//mc_printSamples(outputFile, currentPoints);
 
 }
 
@@ -452,14 +452,14 @@ void mc_cycleMain(mc_Points *currentPoints,const double odo_Position[3],
 	stepIndex++;
 
 	sprintfResult = sprintf(outputFile, "initStep%d.m",stepIndex);
-	mc_printSamples(outputFile, currentPoints);
+	//mc_printSamples(outputFile, currentPoints);
 
 
 	mc_generateNextOdometryPoints(currentPoints,odo_Position, old_odo, covariance);
 
 
 	sprintf(outputFile, "afterOdometry%d.m", stepIndex);
-	mc_printSamples(outputFile, currentPoints);
+	//mc_printSamples(outputFile, currentPoints);
 
 
 	mc_cycleMainNoMovement(currentPoints, tagDetections, tags);

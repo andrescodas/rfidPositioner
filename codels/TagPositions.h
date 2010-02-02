@@ -101,6 +101,8 @@ typedef struct TagDetection {
 
 } TagDetection;
 
+
+
 //a structure describing a tag expectation (antenna,probability of detection,tag_id)
 typedef struct TagExpectation {
 	int antenna;

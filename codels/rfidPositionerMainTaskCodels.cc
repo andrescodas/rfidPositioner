@@ -153,6 +153,10 @@ rfidStartParticulesStart(POSITION *position, int *report)
 	mc_init(mc_Point(position->xRob, position->yRob,
 			position->theta),&currentPoints);
 
+	if (initInput() != 0) {
+		printf("Problems in input initialization\n");
+	}
+
 	old_odo[0] = position->xRob;
 	old_odo[1] = position->yRob;
 	old_odo[2] = position->theta;
